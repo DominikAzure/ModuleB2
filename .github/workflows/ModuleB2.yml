@@ -1,4 +1,4 @@
-name: ModuleB
+name: ModuleB2
 on:
   push:
     branches: [ "main" ]
