@@ -1,0 +1,31 @@
+name: ModuleB
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    #actions/checkout@main
+      - uses: actions/checkout@v3
+      
+      # Log into Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+
+      - name: Deploy Azure Resource Manager (ARM) Template
+        uses: Azure/arm-deploy@v1.0.9
+        with:
+            # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
+            scope: subscription
+            # Override the Subscription Id set by Azure Login.
+            subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+            # Specify the Id for the Management Group, only required for Management Group Deployments.
+            template: arm.json
+            
