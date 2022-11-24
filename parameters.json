@@ -1,45 +1,5 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "publicIPAddresses_GW_PIP_name": {
-            "value": null
-        },
-        "virtualNetworks_HUB_Vnet_name": {
-            "value": null
-        },
-        "virtualNetworkGateways_GW_name": {
-            "value": null
-        },
-        "virtualNetworks_SPOKE_Vnet_name": {
-            "value": null
-        },
-        "virtualMachines_vmlinuxdominik_name": {
-            "value": null
-        },
-        "publicIPAddresses_vmlinuxdominik_ip_name": {
-            "value": null
-        },
-        "networkInterfaces_vmlinuxdominik957_z1_name": {
-            "value": null
-        },
-        "managedClusters_dominikkluster_name": {
-            "value": null
-        },
-        "networkSecurityGroups_vmlinuxdominik_nsg_name": {
-            "value": null
-        },
-        "schedules_shutdown_computevm_vmlinuxdominik_name": {
-            "value": null
-        },
-        "workspaces_DefaultWorkspace_34eda756_e47f_4ab1_99d7_2098b6da80e9_NEU_externalid": {
-            "value": null
-        },
-        "publicIPAddresses_a3ff3a8a_1ed5_44dc_a49d_5a1792169dcd_externalid": {
-            "value": null
-        },
-        "userAssignedIdentities_dominikkluster_agentpool_externalid": {
-            "value": null
-        }
-    }
+    "parameters": {}
 }
