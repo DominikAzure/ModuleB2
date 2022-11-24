@@ -28,5 +28,5 @@ jobs:
             subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
             # Specify the Id for the Management Group, only required for Management Group Deployments.
             template: template.json
-            parameters: parameters.json
+            #parameters: parameters.json
             region: 'northeurope'
