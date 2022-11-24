@@ -1,66 +1,13 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "publicIPAddresses_GW_PIP_name": {
-            "defaultValue": "GW-PIP",
-            "type": "String"
-        },
-        "virtualNetworks_HUB_Vnet_name": {
-            "defaultValue": "HUB-Vnet",
-            "type": "String"
-        },
-        "virtualNetworkGateways_GW_name": {
-            "defaultValue": "GW",
-            "type": "String"
-        },
-        "virtualNetworks_SPOKE_Vnet_name": {
-            "defaultValue": "SPOKE-Vnet",
-            "type": "String"
-        },
-        "virtualMachines_vmlinuxdominik_name": {
-            "defaultValue": "vmlinuxdominik",
-            "type": "String"
-        },
-        "publicIPAddresses_vmlinuxdominik_ip_name": {
-            "defaultValue": "vmlinuxdominik-ip",
-            "type": "String"
-        },
-        "networkInterfaces_vmlinuxdominik957_z1_name": {
-            "defaultValue": "vmlinuxdominik957_z1",
-            "type": "String"
-        },
-        "managedClusters_dominikkluster_name": {
-            "defaultValue": "dominikkluster",
-            "type": "String"
-        },
-        "networkSecurityGroups_vmlinuxdominik_nsg_name": {
-            "defaultValue": "vmlinuxdominik-nsg",
-            "type": "String"
-        },
-        "schedules_shutdown_computevm_vmlinuxdominik_name": {
-            "defaultValue": "shutdown-computevm-vmlinuxdominik",
-            "type": "String"
-        },
-        "workspaces_DefaultWorkspace_34eda756_e47f_4ab1_99d7_2098b6da80e9_NEU_externalid": {
-            "defaultValue": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourceGroups/DefaultResourceGroup-NEU/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-34eda756-e47f-4ab1-99d7-2098b6da80e9-NEU",
-            "type": "String"
-        },
-        "publicIPAddresses_a3ff3a8a_1ed5_44dc_a49d_5a1792169dcd_externalid": {
-            "defaultValue": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourceGroups/MC_Dominik_dominikkluster_northeurope/providers/Microsoft.Network/publicIPAddresses/a3ff3a8a-1ed5-44dc-a49d-5a1792169dcd",
-            "type": "String"
-        },
-        "userAssignedIdentities_dominikkluster_agentpool_externalid": {
-            "defaultValue": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourceGroups/MC_Dominik_dominikkluster_northeurope/providers/Microsoft.ManagedIdentity/userAssignedIdentities/dominikkluster-agentpool",
-            "type": "String"
-        }
-    },
+    "parameters": {},
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('publicIPAddresses_GW_PIP_name')]",
+            "name": "GW-PIP",
             "location": "northeurope",
             "sku": {
                 "name": "Standard",
@@ -82,7 +29,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('publicIPAddresses_vmlinuxdominik_ip_name')]",
+            "name": "vmlinuxdominik-ip",
             "location": "northeurope",
             "sku": {
                 "name": "Standard",
@@ -102,10 +49,10 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2022-03-01",
-            "name": "[parameters('virtualMachines_vmlinuxdominik_name')]",
+            "name": "vmlinuxdominik",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_vmlinuxdominik957_z1_name'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', 'vmlinuxdominik957_z1')]"
             ],
             "zones": [
                 "1"
@@ -123,12 +70,12 @@
                     },
                     "osDisk": {
                         "osType": "Linux",
-                        "name": "[concat(parameters('virtualMachines_vmlinuxdominik_name'), '_disk1_405beceefc354d0abb3e35f0708fe35b')]",
+                        "name": "vmlinuxdominik_disk1_405beceefc354d0abb3e35f0708fe35b",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
                             "storageAccountType": "Premium_LRS",
-                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_vmlinuxdominik_name'), '_disk1_405beceefc354d0abb3e35f0708fe35b'))]"
+                            "id": "[resourceId('Microsoft.Compute/disks', 'vmlinuxdominik_disk1_405beceefc354d0abb3e35f0708fe35b')]"
                         },
                         "deleteOption": "Delete",
                         "diskSizeGB": 30
@@ -136,7 +83,7 @@
                     "dataDisks": []
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_vmlinuxdominik_name')]",
+                    "computerName": "vmlinuxdominik",
                     "adminUsername": "dominik",
                     "linuxConfiguration": {
                         "disablePasswordAuthentication": false,
@@ -153,7 +100,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_vmlinuxdominik957_z1_name'))]",
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'vmlinuxdominik957_z1')]",
                             "properties": {
                                 "deleteOption": "Detach"
                             }
@@ -170,10 +117,10 @@
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2022-08-02-preview",
-            "name": "[parameters('managedClusters_dominikkluster_name')]",
+            "name": "dominikkluster",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]"
             ],
             "sku": {
                 "name": "Basic",
@@ -184,16 +131,16 @@
             },
             "properties": {
                 "kubernetesVersion": "1.23.12",
-                "dnsPrefix": "[concat(parameters('managedClusters_dominikkluster_name'), '-dns')]",
+                "dnsPrefix": "dominikkluster-dns",
                 "agentPoolProfiles": [
                     {
                         "name": "agentpool",
-                        "count": 3,
+                        "count": 2,
                         "vmSize": "Standard_DS2_v2",
                         "osDiskSizeGB": 128,
                         "osDiskType": "Managed",
                         "kubeletDiskType": "OS",
-                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]",
+                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]",
                         "maxPods": 110,
                         "type": "VirtualMachineScaleSets",
                         "availabilityZones": [
@@ -236,14 +183,14 @@
                     "omsAgent": {
                         "enabled": true,
                         "config": {
-                            "logAnalyticsWorkspaceResourceID": "[parameters('workspaces_DefaultWorkspace_34eda756_e47f_4ab1_99d7_2098b6da80e9_NEU_externalid')]"
+                            "logAnalyticsWorkspaceResourceID": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourceGroups/DefaultResourceGroup-NEU/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-34eda756-e47f-4ab1-99d7-2098b6da80e9-NEU"
                         }
                     },
                     "openServiceMesh": {
                         "enabled": true
                     }
                 },
-                "nodeResourceGroup": "[concat('MC_Dominik_', parameters('managedClusters_dominikkluster_name'), '_northeurope')]",
+                "nodeResourceGroup": "MC_Dominik_dominikkluster_northeurope",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
@@ -254,7 +201,7 @@
                         },
                         "effectiveOutboundIPs": [
                             {
-                                "id": "[parameters('publicIPAddresses_a3ff3a8a_1ed5_44dc_a49d_5a1792169dcd_externalid')]"
+                                "id": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourceGroups/MC_Dominik_dominikkluster_northeurope/providers/Microsoft.Network/publicIPAddresses/a3ff3a8a-1ed5-44dc-a49d-5a1792169dcd"
                             }
                         ],
                         "backendPoolType": "nodeIPConfiguration"
@@ -272,7 +219,7 @@
                 },
                 "identityProfile": {
                     "kubeletidentity": {
-                        "resourceId": "[parameters('userAssignedIdentities_dominikkluster_agentpool_externalid')]",
+                        "resourceId": "/subscriptions/34eda756-e47f-4ab1-99d7-2098b6da80e9/resourcegroups/MC_Dominik_dominikkluster_northeurope/providers/Microsoft.ManagedIdentity/userAssignedIdentities/dominikkluster-agentpool",
                         "clientId": "27166f4a-2972-45b9-9fa7-83f06c8d1109",
                         "objectId": "83ee360c-5824-4d7f-8fe8-3ebe4e77188a"
                     }
@@ -322,10 +269,10 @@
         {
             "type": "microsoft.devtestlab/schedules",
             "apiVersion": "2018-09-15",
-            "name": "[parameters('schedules_shutdown_computevm_vmlinuxdominik_name')]",
+            "name": "shutdown-computevm-vmlinuxdominik",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_vmlinuxdominik_name'))]"
+                "[resourceId('Microsoft.Compute/virtualMachines', 'vmlinuxdominik')]"
             ],
             "properties": {
                 "status": "Enabled",
@@ -340,22 +287,22 @@
                     "emailRecipient": "s2@michalfurmankiewiczhotmail.onmicrosoft.com",
                     "notificationLocale": "en"
                 },
-                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_vmlinuxdominik_name'))]"
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', 'vmlinuxdominik')]"
             }
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('networkSecurityGroups_vmlinuxdominik_nsg_name')]",
+            "name": "vmlinuxdominik-nsg",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'), 'SSH')]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'vmlinuxdominik-nsg', 'SSH')]"
             ],
             "properties": {
                 "securityRules": [
                     {
                         "name": "SSH",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'), 'SSH')]",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'vmlinuxdominik-nsg', 'SSH')]",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
                             "protocol": "TCP",
@@ -378,9 +325,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'), '/SSH')]",
+            "name": "vmlinuxdominik-nsg/SSH",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmlinuxdominik-nsg')]"
             ],
             "properties": {
                 "protocol": "TCP",
@@ -400,9 +347,9 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('virtualNetworks_HUB_Vnet_name'), '/default')]",
+            "name": "HUB-Vnet/default",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
             ],
             "properties": {
                 "addressPrefix": "10.0.1.0/24",
@@ -414,23 +361,9 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('virtualNetworks_SPOKE_Vnet_name'), '/default')]",
+            "name": "HUB-Vnet/GatewaySubnet",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.1.0.0/16",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Disabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('virtualNetworks_HUB_Vnet_name'), '/GatewaySubnet')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
             ],
             "properties": {
                 "addressPrefix": "10.0.0.0/24",
@@ -441,20 +374,34 @@
             }
         },
         {
-            "type": "Microsoft.ContainerService/managedClusters/agentPools",
-            "apiVersion": "2022-08-02-preview",
-            "name": "[concat(parameters('managedClusters_dominikkluster_name'), '/agentpool')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2022-01-01",
+            "name": "SPOKE-Vnet/default",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_dominikkluster_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]"
             ],
             "properties": {
-                "count": 3,
+                "addressPrefix": "10.1.0.0/16",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "2022-08-02-preview",
+            "name": "dominikkluster/agentpool",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'dominikkluster')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]"
+            ],
+            "properties": {
+                "count": 2,
                 "vmSize": "Standard_DS2_v2",
                 "osDiskSizeGB": 128,
                 "osDiskType": "Managed",
                 "kubeletDiskType": "OS",
-                "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]",
+                "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]",
                 "maxPods": 110,
                 "type": "VirtualMachineScaleSets",
                 "availabilityZones": [
@@ -480,25 +427,25 @@
         {
             "type": "Microsoft.Network/virtualNetworkGateways",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('virtualNetworkGateways_GW_name')]",
+            "name": "GW",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_GW_PIP_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'GatewaySubnet')]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'GW-PIP')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'GatewaySubnet')]"
             ],
             "properties": {
                 "enablePrivateIpAddress": false,
                 "ipConfigurations": [
                     {
                         "name": "default",
-                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_GW_name')), '/ipConfigurations/default')]",
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', 'GW'), '/ipConfigurations/default')]",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_GW_PIP_name'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'GW-PIP')]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'GatewaySubnet')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'GatewaySubnet')]"
                             }
                         }
                     }
@@ -520,7 +467,7 @@
                     "peerWeight": 0,
                     "bgpPeeringAddresses": [
                         {
-                            "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_GW_name')), '/ipConfigurations/default')]",
+                            "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', 'GW'), '/ipConfigurations/default')]",
                             "customBgpIpAddresses": []
                         }
                     ]
@@ -531,16 +478,16 @@
         {
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('virtualNetworks_HUB_Vnet_name'), '/H-S')]",
+            "name": "HUB-Vnet/H-S",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]"
             ],
             "properties": {
                 "peeringState": "Connected",
                 "peeringSyncLevel": "FullyInSync",
                 "remoteVirtualNetwork": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]"
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]"
                 },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
@@ -562,16 +509,16 @@
         {
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "apiVersion": "2022-01-01",
-            "name": "[concat(parameters('virtualNetworks_SPOKE_Vnet_name'), '/S-H')]",
+            "name": "SPOKE-Vnet/S-H",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
             ],
             "properties": {
                 "peeringState": "Connected",
                 "peeringSyncLevel": "FullyInSync",
                 "remoteVirtualNetwork": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
                 },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
@@ -593,19 +540,19 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('networkInterfaces_vmlinuxdominik957_z1_name')]",
+            "name": "vmlinuxdominik957_z1",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_vmlinuxdominik_ip_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'default')]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'vmlinuxdominik-ip')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'default')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmlinuxdominik-nsg')]"
             ],
             "kind": "Regular",
             "properties": {
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
-                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_vmlinuxdominik957_z1_name')), '/ipConfigurations/ipconfig1')]",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', 'vmlinuxdominik957_z1'), '/ipConfigurations/ipconfig1')]",
                         "etag": "W/\"6d717e6e-5760-44d5-a69f-2b6687016e19\"",
                         "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
                         "properties": {
@@ -614,16 +561,16 @@
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
                                 "name": "vmlinuxdominik-ip",
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_vmlinuxdominik_ip_name'))]",
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'vmlinuxdominik-ip')]",
                                 "properties": {
                                     "provisioningState": "Succeeded",
-                                    "resourceGuid": "1fe0198e-d519-4024-89d1-13a51d013bda",
+                                    "resourceGuid": "d70b797c-b414-4a1a-9c1c-ec75af730121",
                                     "publicIPAddressVersion": "IPv4",
                                     "publicIPAllocationMethod": "Dynamic",
                                     "idleTimeoutInMinutes": 4,
                                     "ipTags": [],
                                     "ipConfiguration": {
-                                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_vmlinuxdominik957_z1_name')), '/ipConfigurations/ipconfig1')]"
+                                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', 'vmlinuxdominik957_z1'), '/ipConfigurations/ipconfig1')]"
                                     },
                                     "deleteOption": "Detach"
                                 },
@@ -634,7 +581,7 @@
                                 }
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'default')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'default')]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
@@ -647,7 +594,7 @@
                 "enableAcceleratedNetworking": true,
                 "enableIPForwarding": false,
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_vmlinuxdominik_nsg_name'))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmlinuxdominik-nsg')]"
                 },
                 "nicType": "Standard"
             }
@@ -655,12 +602,12 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('virtualNetworks_SPOKE_Vnet_name')]",
+            "name": "SPOKE-Vnet",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]",
-                "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_SPOKE_Vnet_name'), 'S-H')]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', 'SPOKE-Vnet', 'S-H')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
             ],
             "properties": {
                 "addressSpace": {
@@ -671,7 +618,7 @@
                 "subnets": [
                     {
                         "name": "default",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_SPOKE_Vnet_name'), 'default')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'SPOKE-Vnet', 'default')]",
                         "properties": {
                             "addressPrefix": "10.1.0.0/16",
                             "delegations": [],
@@ -684,12 +631,12 @@
                 "virtualNetworkPeerings": [
                     {
                         "name": "S-H",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_SPOKE_Vnet_name'), 'S-H')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', 'SPOKE-Vnet', 'S-H')]",
                         "properties": {
                             "peeringState": "Connected",
                             "peeringSyncLevel": "FullyInSync",
                             "remoteVirtualNetwork": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_Vnet_name'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', 'HUB-Vnet')]"
                             },
                             "allowVirtualNetworkAccess": true,
                             "allowForwardedTraffic": true,
@@ -716,13 +663,13 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2022-01-01",
-            "name": "[parameters('virtualNetworks_HUB_Vnet_name')]",
+            "name": "HUB-Vnet",
             "location": "northeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'default')]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'GatewaySubnet')]",
-                "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_HUB_Vnet_name'), 'H-S')]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'default')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'GatewaySubnet')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', 'HUB-Vnet', 'H-S')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]"
             ],
             "properties": {
                 "addressSpace": {
@@ -733,7 +680,7 @@
                 "subnets": [
                     {
                         "name": "default",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'default')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'default')]",
                         "properties": {
                             "addressPrefix": "10.0.1.0/24",
                             "delegations": [],
@@ -744,7 +691,7 @@
                     },
                     {
                         "name": "GatewaySubnet",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_HUB_Vnet_name'), 'GatewaySubnet')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HUB-Vnet', 'GatewaySubnet')]",
                         "properties": {
                             "addressPrefix": "10.0.0.0/24",
                             "serviceEndpoints": [],
@@ -758,12 +705,12 @@
                 "virtualNetworkPeerings": [
                     {
                         "name": "H-S",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_HUB_Vnet_name'), 'H-S')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', 'HUB-Vnet', 'H-S')]",
                         "properties": {
                             "peeringState": "Connected",
                             "peeringSyncLevel": "FullyInSync",
                             "remoteVirtualNetwork": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_SPOKE_Vnet_name'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', 'SPOKE-Vnet')]"
                             },
                             "allowVirtualNetworkAccess": true,
                             "allowForwardedTraffic": true,
