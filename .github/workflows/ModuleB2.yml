@@ -27,5 +27,6 @@ jobs:
             # Override the Subscription Id set by Azure Login.
             subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
             # Specify the Id for the Management Group, only required for Management Group Deployments.
-            template: arm.json
+            template: template.json
+            parameters: parameters.json
             
